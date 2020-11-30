@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="voa-reader-resource" />
+        <module name="voa-reader-dao" />
+        <module name="voa-reader-service" />
+        <module name="voa-reader-base" />
+        <module name="voa-reader-starter" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="voa-reader" options="-parameters" />
+      <module name="voa-reader-base" options="" />
+      <module name="voa-reader-dao" options="" />
+      <module name="voa-reader-resource" options="" />
+      <module name="voa-reader-service" options="" />
+    </option>
+  </component>
+</project>

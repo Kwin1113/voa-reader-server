@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: voa-reader-server
+  mvc:
+    servlet:
+      path: /voa-reader
+
+  datasource:
+    driver-class-name:
