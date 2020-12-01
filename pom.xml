@@ -29,6 +29,7 @@
         <commons-lang3.version>3.10</commons-lang3.version>
         <h2.version>1.4.200</h2.version>
         <mybatis-plus-boot-starter.version>3.4.0</mybatis-plus-boot-starter.version>
+        <hutool.version>5.5.1</hutool.version>
     </properties>
 
     <dependencyManagement>
@@ -111,6 +112,14 @@
                 <version>${h2.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

@@ -17,6 +17,11 @@
             <artifactId>voa-reader-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.kwin</groupId>
+            <artifactId>voa-reader-resource</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

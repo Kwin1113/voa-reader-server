@@ -101,6 +101,7 @@ public class Http {
     }
 
     private static File getFile(String url, Map<String, String> headers, String fileName) {
+
         HttpGet request = (HttpGet) GET_REQUEST.apply(new HttpGet(url), headers);
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -114,33 +115,67 @@ public class Http {
             }
 
             HttpEntity entity = httpResponse.getEntity();
-            // 获取返回流写入文件
-            InputStream is = entity.getContent();
-            File file = new File("tmp/" + fileName);
-            FileOutputStream fileout = new FileOutputStream(file);
-            byte[] buffer = new byte[1024];
-            int ch;
-            while ((ch = is.read(buffer)) != -1) {
-                fileout.write(buffer, 0, ch);
-            }
-            is.close();
-            fileout.flush();
-            fileout.close();
 
-            return file;
+            File file = new File("tmp/" + fileName);
+            FileOutputStream fileout = null;
+            try (InputStream is = entity.getContent()) {
+                fileout = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int ch;
+                while ((ch = is.read(buffer)) != -1) {
+                    fileout.write(buffer, 0, ch);
+                }
+                is.close();
+                fileout.flush();
+                fileout.close();
+
+                return file;
+            }
         } catch (Exception ex) {
-            return null;
+            ex.printStackTrace();
         } finally {
             HttpClientUtils.closeQuietly(httpClient);
             if (null != httpResponse) {
                 HttpClientUtils.closeQuietly(httpResponse);
             }
         }
+        return null;
     }
 
     public static File getFile(String url, Map<String, String> params, Map<String, String> headers, @Nullable String fileName) {
         fileName = fileName != null ? fileName : VOACommonUtil.getFileNameFromUrl(url);
         return getFile(toRequestUrl(url, params), headers, fileName);
+    }
+
+    public static InputStream getInputStream(String url, Map<String, String> params, Map<String, String> headers) {
+        return getInputStream(toRequestUrl(url, params), headers);
+    }
+
+    private static InputStream getInputStream(String url, Map<String, String> headers) {
+        HttpGet request = (HttpGet) GET_REQUEST.apply(new HttpGet(url), headers);
+
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        CloseableHttpResponse httpResponse = null;
+        Integer statusCode = null;
+        try {
+            httpResponse = httpClient.execute(request);
+            statusCode = httpResponse.getStatusLine().getStatusCode();
+            if (statusCode != 200) {
+                throw new HttpException("状态码异常, 状态码：" + statusCode);
+            }
+
+            HttpEntity entity = httpResponse.getEntity();
+
+            return entity.getContent();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            HttpClientUtils.closeQuietly(httpClient);
+            if (null != httpResponse) {
+                HttpClientUtils.closeQuietly(httpResponse);
+            }
+        }
+        return null;
     }
 
     /**

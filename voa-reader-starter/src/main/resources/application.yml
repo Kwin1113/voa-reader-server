@@ -6,6 +6,9 @@ spring:
       path: /voa-reader
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://106.14.169.161:3306/voa-reader
+    url: jdbc:mysql://106.14.169.161:3306/voa-reader?characterEncoding=utf-8&useSSL=false
     username: root
     password:
+
+mybatis-plus:
+  typeEnumsPackage: xyz.kwin.voa.enums

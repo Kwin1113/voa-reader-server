@@ -25,7 +25,7 @@ public class VOACommonUtil {
 
     public static String getFileSuffixFromFileName(String fileName) {
         int suffixIndex = fileName.lastIndexOf(".");
-        return suffixIndex == -1 ? ".tmp" : fileName.substring(suffixIndex + 1);
+        return suffixIndex == -1 ? "tmp" : fileName.substring(suffixIndex + 1);
     }
 
     public static void main(String[] args) {

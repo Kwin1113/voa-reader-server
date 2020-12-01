@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>xyz.kwin</groupId>
+            <artifactId>voa-reader-base</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.kwin</groupId>
             <artifactId>voa-reader-service</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
