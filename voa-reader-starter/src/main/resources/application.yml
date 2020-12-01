@@ -4,6 +4,8 @@ spring:
   mvc:
     servlet:
       path: /voa-reader
-
   datasource:
-    driver-class-name:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://106.14.169.161:3306/voa-reader
+    username: root
+    password:

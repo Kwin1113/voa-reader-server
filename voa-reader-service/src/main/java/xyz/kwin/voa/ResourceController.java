@@ -1,7 +1,9 @@
 package xyz.kwin.voa;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.kwin.voa.mapper.ResourceMapper;
 
 /**
  * @author Kwin
@@ -10,4 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/resource")
 public class ResourceController {
+
+    private final ResourceMapper resourceMapper;
+
+    public ResourceController(ResourceMapper resourceMapper) {
+        this.resourceMapper = resourceMapper;
+    }
+
+    @GetMapping("/select")
+    public Object select() {
+        return resourceMapper.selectById(1);
+    }
 }

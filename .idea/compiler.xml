@@ -7,19 +7,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="voa-reader-resource" />
-        <module name="voa-reader-dao" />
-        <module name="voa-reader-service" />
-        <module name="voa-reader-base" />
         <module name="voa-reader-starter" />
+        <module name="voa-reader-base" />
+        <module name="voa-reader-service" />
+        <module name="voa-reader-core" />
+        <module name="voa-reader-resource" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="8" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="voa-reader" options="-parameters" />
+      <module name="voa-reader" options="" />
       <module name="voa-reader-base" options="" />
-      <module name="voa-reader-dao" options="" />
+      <module name="voa-reader-core" options="" />
       <module name="voa-reader-resource" options="" />
       <module name="voa-reader-service" options="" />
     </option>
