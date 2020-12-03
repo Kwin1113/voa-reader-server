@@ -3,11 +3,11 @@ package xyz.kwin.voa.domain;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.kwin.voa.enums.SupportedFileType;
+import xyz.kwin.voa.domain.base.BaseDO;
 
 /**
  * @author 蓝波 <lanbo.jing@tuya.com>
- * @since 2020/12/1 10:18 上午
+ * @since 2020/12/2 9:59 上午
  */
 @Data
 @Builder
@@ -15,12 +15,6 @@ import xyz.kwin.voa.enums.SupportedFileType;
 public class Resource extends BaseDO {
     private String title;
     private String url;
-    private String fileName;
-    private SupportedFileType fileType;
     private String origin;
     private String remark;
-
-    private String ossKey;
-    private String ossPath;
-    private Integer fileSize;
 }

@@ -6,12 +6,13 @@ import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
-import xyz.kwin.voa.domain.ResourceDescription;
+import xyz.kwin.voa.domain.AttachmentDesc;
+import xyz.kwin.voa.domain.Resource;
 import xyz.kwin.voa.enums.SupportedFileType;
+import xyz.kwin.voa.service.ResourceDomainService;
 import xyz.kwin.voa.storage.ResourceSaveExecutor;
 import xyz.kwin.voa.utils.VOACommonUtil;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -25,8 +26,13 @@ import java.util.Set;
 @Component
 public class VOASavePipeline implements Pipeline {
 
-    @Resource
-    private ResourceSaveExecutor executor;
+    private final ResourceDomainService resourceDomainService;
+    private final ResourceSaveExecutor executor;
+
+    public VOASavePipeline(ResourceDomainService resourceDomainService, ResourceSaveExecutor executor) {
+        this.resourceDomainService = resourceDomainService;
+        this.executor = executor;
+    }
 
     private static final String URL_REGEX = "(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
 
@@ -47,55 +53,66 @@ public class VOASavePipeline implements Pipeline {
     @Override
     public void process(ResultItems resultItems, Task task) {
         String url = resultItems.getRequest().getUrl();
-        System.out.println("request url: " + url);
 
         String title = null;
         String origin = null;
         String remark = null;
-        for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
-            if (StringUtils.isEmpty(entry.getValue().toString()) || "null".equals(entry.getValue().toString().toLowerCase())) {
+        Map<String, Object> resultMap = resultItems.getAll();
+        // title prop.
+        if (resultMap.containsKey(TITLE)) {
+            title = resultMap.get(TITLE).toString();
+        }
+        // origin prop.
+        if (resultMap.containsKey(ORIGIN)) {
+            Object originObject = resultMap.get(ORIGIN);
+            if (originObject instanceof ArrayList) {
+                origin = StringUtils.join((ArrayList) originObject, "/");
+            } else {
+                origin = originObject.toString();
+            }
+        }
+        // remark prop.
+        if (resultMap.containsKey(REMARK)) {
+            title = resultMap.get(REMARK).toString();
+        }
+
+        Resource resource = Resource.builder()
+                .title(title)
+                .url(url)
+                .origin(origin)
+                .remark(remark)
+                .build();
+        resourceDomainService.save(resource);
+        // solve attachment.
+        for (String fileFormat : FILE_FORMAT_SET) {
+            // if resource url starts with "//", add current web protocol as resource url protocol.
+            Object result = resultMap.get(fileFormat);
+            if (result == null) {
                 continue;
             }
-            // 获取标题
-            if (TITLE.equals(entry.getKey())) {
-                title = entry.getValue().toString();
+            String resourceUrl = result.toString();
+            // spider 解析
+            if (StringUtils.isEmpty(resourceUrl) || "null".equals(resourceUrl)) {
+                continue;
             }
-            // 获取来源
-            else if (ORIGIN.equals(entry.getKey())) {
-                if (entry.getValue() instanceof ArrayList) {
-                    origin = StringUtils.join((ArrayList) entry.getValue(), "/");
-                } else {
-                    origin = entry.getValue().toString();
-                }
+            if (resourceUrl.startsWith("//")) {
+                String protocol = url.substring(0, url.indexOf(":") + 1);
+                resourceUrl = protocol + resourceUrl;
             }
-            // 获取备注
-            else if (REMARK.equals(entry.getKey())) {
-                remark = entry.getValue().toString();
-            }
-            // 存在可下载的文件格式（爬虫解析时指定）
-            else if (FILE_FORMAT_SET.contains(entry.getKey())) {
-                // 如果URL为//开头，则增加当前页面协议头
-                String resourceUrl = entry.getValue().toString();
-                if (resourceUrl.startsWith("//")) {
-                    String protocol = url.substring(0, url.indexOf(":") + 1);
-                    resourceUrl = protocol + resourceUrl;
-                }
 
-                // 匹配的URL格式 - 下载资源
-                if (resourceUrl.matches(URL_REGEX)) {
-                    String fileName = VOACommonUtil.getFileNameFromUrl(resourceUrl);
-                    String fileType = VOACommonUtil.getFileSuffixFromFileName(fileName);
-                    ResourceDescription resourceDesc = ResourceDescription.builder()
-                            .title(title)
-                            .url(resourceUrl)
-                            .fileName(fileName)
-                            .fileType(SupportedFileType.getBySuffix(fileType))
-                            .origin(origin)
-                            .remark(remark)
-                            .build();
+            // if resource is url - download resource.
+            if (resourceUrl.matches(URL_REGEX)) {
+                String fileName = VOACommonUtil.getFileNameFromUrl(resourceUrl);
+                String fileType = VOACommonUtil.getFileSuffixFromFileName(fileName);
+                AttachmentDesc resourceDesc = AttachmentDesc.builder()
+                        .url(resourceUrl)
+                        .fileName(fileName)
+                        .fileType(SupportedFileType.getBySuffix(fileType))
+                        .remark(remark)
+                        .build();
 
-                    executor.submit(resourceDesc);
-                }
+                // submit to executor.
+                executor.attachmentAction(resourceDesc);
             }
         }
     }

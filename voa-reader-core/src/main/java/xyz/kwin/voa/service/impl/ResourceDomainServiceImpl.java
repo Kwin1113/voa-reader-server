@@ -8,7 +8,7 @@ import xyz.kwin.voa.service.ResourceDomainService;
 
 /**
  * @author 蓝波 <lanbo.jing@tuya.com>
- * @since 2020/12/1 11:55 上午
+ * @since 2020/12/3 11:00 上午
  */
 @Service
 public class ResourceDomainServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements ResourceDomainService {

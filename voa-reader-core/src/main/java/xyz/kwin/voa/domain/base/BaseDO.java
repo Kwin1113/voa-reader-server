@@ -1,4 +1,4 @@
-package xyz.kwin.voa.domain;
+package xyz.kwin.voa.domain.base;
 
 import lombok.Data;
 
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
  */
 @Data
 public class BaseDO {
-    private Long id;
-    private LocalDateTime ctime;
-    private LocalDateTime mtime;
-    private Boolean isvalid;
+    protected Long id;
+    protected LocalDateTime ctime;
+    protected LocalDateTime mtime;
+    protected Boolean isvalid;
 }

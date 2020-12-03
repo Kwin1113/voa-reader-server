@@ -1,0 +1,30 @@
+@startuml
+
+enum SupportedFileType {
+    UNKNOWN(0, "unknown", "unknown/"),
+    MP3(1, "mp3", "mp3/"),
+    TXT(2, "txt", "txt/"),
+    DOC(3, "doc", "doc/"),
+    DOCX(4, "docx", "doc/"),
+}
+
+class Attachment {
+    String url;
+    String fileName;
+    SupportedFileType fileType;
+    String remark;
+    String ossKey;
+    String ossPath;
+    Integer fileSize;
+}
+
+class Resource {
+    String title;
+    String url;
+    String origin;
+    String remark;
+}
+
+Attachment -* Resource
+SupportedFileType -* Attachment
+@enduml

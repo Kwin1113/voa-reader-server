@@ -3,7 +3,7 @@ package xyz.kwin.voa;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import xyz.kwin.voa.mapper.ResourceMapper;
+import xyz.kwin.voa.mapper.AttachmentMapper;
 import xyz.kwin.voa.spider.processors.ChinaVoaPageProcessor;
 
 /**
@@ -14,17 +14,17 @@ import xyz.kwin.voa.spider.processors.ChinaVoaPageProcessor;
 @RequestMapping("/resource")
 public class ResourceController {
 
-    private final ResourceMapper resourceMapper;
+    private final AttachmentMapper attachmentMapper;
     private final ChinaVoaPageProcessor chinaVoaPageProcessor;
 
-    public ResourceController(ResourceMapper resourceMapper, ChinaVoaPageProcessor chinaVoaPageProcessor) {
-        this.resourceMapper = resourceMapper;
+    public ResourceController(AttachmentMapper attachmentMapper, ChinaVoaPageProcessor chinaVoaPageProcessor) {
+        this.attachmentMapper = attachmentMapper;
         this.chinaVoaPageProcessor = chinaVoaPageProcessor;
     }
 
     @GetMapping("/select")
     public Object select() {
-        return resourceMapper.selectById(1);
+        return attachmentMapper.selectById(1);
     }
 
     @GetMapping("/fetch")

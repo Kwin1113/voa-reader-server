@@ -1,7 +1,6 @@
 package xyz.kwin.voa.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.istack.internal.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,84 +97,6 @@ public class Http {
      */
     public static Response get(String url, Map<String, String> params, Map<String, String> headers) {
         return get(toRequestUrl(url, params), headers);
-    }
-
-    private static File getFile(String url, Map<String, String> headers, String fileName) {
-
-        HttpGet request = (HttpGet) GET_REQUEST.apply(new HttpGet(url), headers);
-
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        CloseableHttpResponse httpResponse = null;
-        Integer statusCode = null;
-        try {
-            httpResponse = httpClient.execute(request);
-            statusCode = httpResponse.getStatusLine().getStatusCode();
-            if (statusCode != 200) {
-                throw new HttpException("状态码异常, 状态码：" + statusCode);
-            }
-
-            HttpEntity entity = httpResponse.getEntity();
-
-            File file = new File("tmp/" + fileName);
-            FileOutputStream fileout = null;
-            try (InputStream is = entity.getContent()) {
-                fileout = new FileOutputStream(file);
-                byte[] buffer = new byte[1024];
-                int ch;
-                while ((ch = is.read(buffer)) != -1) {
-                    fileout.write(buffer, 0, ch);
-                }
-                is.close();
-                fileout.flush();
-                fileout.close();
-
-                return file;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            HttpClientUtils.closeQuietly(httpClient);
-            if (null != httpResponse) {
-                HttpClientUtils.closeQuietly(httpResponse);
-            }
-        }
-        return null;
-    }
-
-    public static File getFile(String url, Map<String, String> params, Map<String, String> headers, @Nullable String fileName) {
-        fileName = fileName != null ? fileName : VOACommonUtil.getFileNameFromUrl(url);
-        return getFile(toRequestUrl(url, params), headers, fileName);
-    }
-
-    public static InputStream getInputStream(String url, Map<String, String> params, Map<String, String> headers) {
-        return getInputStream(toRequestUrl(url, params), headers);
-    }
-
-    private static InputStream getInputStream(String url, Map<String, String> headers) {
-        HttpGet request = (HttpGet) GET_REQUEST.apply(new HttpGet(url), headers);
-
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        CloseableHttpResponse httpResponse = null;
-        Integer statusCode = null;
-        try {
-            httpResponse = httpClient.execute(request);
-            statusCode = httpResponse.getStatusLine().getStatusCode();
-            if (statusCode != 200) {
-                throw new HttpException("状态码异常, 状态码：" + statusCode);
-            }
-
-            HttpEntity entity = httpResponse.getEntity();
-
-            return entity.getContent();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            HttpClientUtils.closeQuietly(httpClient);
-            if (null != httpResponse) {
-                HttpClientUtils.closeQuietly(httpResponse);
-            }
-        }
-        return null;
     }
 
     /**
