@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.kwin.voa.mapper.AttachmentMapper;
-import xyz.kwin.voa.spider.processors.ChinaVoaPageProcessor;
+import xyz.kwin.voa.spider.chinavoa.ChinaVOAPageProcessor;
 
 /**
  * @author Kwin
@@ -15,9 +15,9 @@ import xyz.kwin.voa.spider.processors.ChinaVoaPageProcessor;
 public class ResourceController {
 
     private final AttachmentMapper attachmentMapper;
-    private final ChinaVoaPageProcessor chinaVoaPageProcessor;
+    private final ChinaVOAPageProcessor chinaVoaPageProcessor;
 
-    public ResourceController(AttachmentMapper attachmentMapper, ChinaVoaPageProcessor chinaVoaPageProcessor) {
+    public ResourceController(AttachmentMapper attachmentMapper, ChinaVOAPageProcessor chinaVoaPageProcessor) {
         this.attachmentMapper = attachmentMapper;
         this.chinaVoaPageProcessor = chinaVoaPageProcessor;
     }

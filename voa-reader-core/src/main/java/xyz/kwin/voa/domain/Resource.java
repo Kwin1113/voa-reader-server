@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import xyz.kwin.voa.domain.base.BaseDO;
+import xyz.kwin.voa.enums.CategoryEnum;
 
 /**
  * @author 蓝波 <lanbo.jing@tuya.com>
@@ -17,4 +18,5 @@ public class Resource extends BaseDO {
     private String url;
     private String origin;
     private String remark;
+    private CategoryEnum category;
 }
